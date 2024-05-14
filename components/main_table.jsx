@@ -99,8 +99,8 @@ const MainTable = ({ data, columns, fnSelect }) => {
   <DebouncedInput
           value={globalFilter }
           onChange={value => setGlobalFilter(String(value))}
-          className="p-2 font-lg shadow border border-block"
-          placeholder="Busqueda general..."
+          className="p-2 font-lg shadow border rounded-md"
+          placeholder="Búsqueda general..."
         />
     <table className='w-full table'>
       <thead>

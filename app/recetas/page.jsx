@@ -1,11 +1,14 @@
 'use client'
 
-import { createReceta, getPersons, getReceta, getMedicamentos } from "@/api/api";
+import { createReceta, getPersons, getReceta, getMedicamentos, createDosage, getDosages, updateDosage, deleteDosage } from "@/api/api";
 import InputControlled from "@/components/input_controlled";
 import MainTable from "@/components/main_table";
 import { useEffect, useRef, useState } from "react";
 import { Controller, set, useForm } from "react-hook-form";
+import { RiEditFill } from "react-icons/ri";
+import { TiDelete } from "react-icons/ti";
 import Select from 'react-select'
+import { useReactToPrint } from 'react-to-print';
 
 
 const RecetaPage = () => {
@@ -16,6 +19,7 @@ const RecetaPage = () => {
     const [recetaID, setRecetaID] = useState(0)
     const formData = useRef(null)
     const modalRef = useRef(null)
+    const divPrint = useRef(null)
     const defaultValues = {
         Medication: null,
         Detail: ''
@@ -56,8 +60,11 @@ const RecetaPage = () => {
         setMedicamentos(listaFormateada)
     }
 
-    const cargaData = () => {
-
+    const cargaData = async () => {
+        if (recetaID > 0) {
+            let dosages = await getDosages(recetaID)
+            setRecetas(dosages)
+        }
     }
 
     const onSelect = async (row) => {
@@ -67,11 +74,14 @@ const RecetaPage = () => {
         if (receta.data.ID === 0) {
             let data = { PersonID: row.original.ID }
             let tmpReceta = await createReceta(data)
-            idReceta = tmpReceta.data.ID
+            // console.log(tmpReceta)
+            idReceta = tmpReceta.ID
+            // console.log(tmpReceta)
         } else {
-            idReceta = receta.ID
+            // console.log(receta.data)
+            idReceta = receta.data.ID
         }
-        // console.log(receta)
+        console.log(idReceta)
         // reset(row.original)
         setRecetaID(idReceta)
         if (modalRef.current) {
@@ -87,25 +97,66 @@ const RecetaPage = () => {
         reset(defaultValues)
     }
 
-    const saveData = () => {
+    const saveData = async () => {
+        console.log(recetaID)
 
         let data = {
-            RecetaID: recetaID,
+            PrescriptionID: recetaID,
             MedicationID: watch('Medication').value,
             Detail: watch('Detail')
         }
-
-
+        if (watch('ID') > 0) {
+            data.ID = watch('ID')
+            const response = await updateDosage(data)
+            console.log(response)
+        } else {
+            const response = await createDosage(data)
+            console.log(response)
+        }
+        // const response = await createDosage(data)
+        // console.log(response)
+        resetForm()
+        cargaData()
     }
+
+    const editDosage = (dosage) => {
+        let tmpDosage = {
+            ID: dosage.ID,
+            Medication: findMedication(dosage.MedicationID),
+            Detail: dosage.Detail
+        }
+        reset(tmpDosage)
+    }
+
+    const deleteDosageByID = async(dosage) => {
+        // console.log(dosage)
+        const response = await deleteDosage(dosage.ID)
+        console.log(response)
+        resetForm()
+        cargaData()
+    }
+
+    const findMedication = (id) => {
+        let tmp = medicamentos.find(item => item.value === id)
+        return tmp
+    }
+
+    const handlePrint = useReactToPrint({
+        content: () => divPrint.current,
+      });
 
     useEffect(() => {
         getPersonas()
         getAllMedicamentos()
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
+        cargaData()
+    }, [recetaID])
+
+    useEffect(() => {
         console.log(watch())
-    },[watch()])
+    }, [watch()])
 
     return (<>
         <div>
@@ -120,36 +171,43 @@ const RecetaPage = () => {
                 <div className="modal" role="dialog">
                     <div className="modal-box">
                         <h3 className="text-lg font-bold">Recetar</h3>
-                        <p className="py-3">Paciente: {persona}</p>
+
                         <form ref={formData} onSubmit={handleSubmit(saveData)}>
                             <div className="">
                                 <Controller
                                     name="Medication"
                                     control={control}
-                                    render={({field})=>
-                                    <Select {...field}
-                                    styles={{    
-                                        option: (provided, state) => ({
-                                            ...provided,
-                                            // backgroundColor: state.isSelected ? '#111' : '#',
-                                            color: 'black'
-                                        }),
-                                    }} className="py-2" options={medicamentos} />}
+                                    render={({ field }) =>
+                                        <Select {...field}
+                                            styles={{
+                                                option: (provided, state) => ({
+                                                    ...provided,
+                                                    // backgroundColor: state.isSelected ? '#111' : '#',
+                                                    color: 'black'
+                                                }),
+                                            }} className="py-2" options={medicamentos} />}
                                 ></Controller>
                                 <InputControlled control={control} name="Detail" label="Detalle: " />
                             </div>
                         </form>
                         <div className="w-full flex justify-end">
-                                <div className="pt-1">
-                                    <div onClick={saveData} className="btn">agregar</div>
-                                </div>
+                            <div className="pt-1">
+                                <div onClick={saveData} className="btn">agregar</div>
+                            </div>
                         </div>
-                        <div className="py-2">
+                        <div ref={divPrint} className="py-2 m-2 printable">
+                            <p className="py-3">Paciente: <span className="font-bold">{persona}</span></p>
                             {
                                 recetas.map(item => {
                                     return (
-                                        <div key={item.ID} className="py-2">
-                                            <p className="font-bold">{item.Medication}</p>
+                                        <div key={item.ID} className="py-2 m-1">
+                                            <p className="flex items-center font-bold gap-1">
+                                                {findMedication(item.MedicationID).label}
+                                                <span className="flex text-transparent">
+                                                    <RiEditFill onClick={() => editDosage(item)} className="cursor-pointer text-transparent hover:text-cyan-800 " />
+                                                    <TiDelete onClick={() => deleteDosageByID(item)} className="cursor-pointer text-transparent hover:text-orange-800" />
+                                                </span>
+                                            </p>
                                             <p>{item.Detail}</p>
                                         </div>
                                     )
@@ -157,7 +215,7 @@ const RecetaPage = () => {
                             }
                         </div>
                         <div class="modal-action">
-                            <div onClick={handleSubmitForm} className="btn">Imprimir</div>
+                            <div onClick={handlePrint} className="btn">Imprimir</div>
                             <label onClick={resetForm} htmlFor="modal_receta" className="btn">Cerrar</label>
                         </div>
                     </div>
