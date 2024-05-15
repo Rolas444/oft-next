@@ -118,7 +118,7 @@ const PersonaPage = () => {
                             </div>
 
                         </form>
-                        <div class="modal-action">
+                        <div className="modal-action">
                             <div onClick={handleSubmitForm} className="btn">Guardar</div>
                             <label onClick={resetForm} htmlFor="my_modal_7" className="btn">Cerrar</label>
                         </div>

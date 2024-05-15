@@ -88,7 +88,7 @@ export const MedicametoPage = () => {
                                 </div>
                             </div>
                         </form>
-                        <div class="modal-action">
+                        <div className="modal-action">
                             <div onClick={handleSubmitForm} className="btn">Guardar</div>
                             <label onClick={resetForm} htmlFor="modal-med" className="btn">Cerrar</label>
                         </div>

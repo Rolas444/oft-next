@@ -209,7 +209,7 @@ const RecetaPage = () => {
                                         <div key={item.ID} className="py-2 m-1">
 
                                             <div className="flex gap-2">
-                                                <p className=" items-center font-bold gap-1">
+                                                <p className="whitespace-nowrap items-center font-bold gap-1">
                                                     {findMedication(item.MedicationID).label}
 
                                                 </p>
@@ -225,7 +225,7 @@ const RecetaPage = () => {
                                 })
                             }
                         </div>
-                        <div class="modal-action">
+                        <div className="modal-action">
                             <div onClick={handlePrint} className="btn">Imprimir</div>
                             <label onClick={resetForm} htmlFor="modal_receta" className="btn">Cerrar</label>
                         </div>

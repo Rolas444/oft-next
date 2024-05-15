@@ -20,16 +20,16 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="es">
-    <body className={inter.className}>
-      <Toaster />
-      <main className="flex">
-        <h2 className="w-full font-bold text-center">App de recetas</h2>
-      </main>
-      <NavMenu menuItems={menu} />
-      <div>
-      {children}
-      </div>
-    </body>
-  </html>
+      <body className={`${inter.className} container m-2`}>
+        <Toaster />
+        <main className="flex">
+          <h2 className="w-full font-bold text-center">App de recetas</h2>
+        </main>
+        <NavMenu menuItems={menu} />
+        <div className="">
+          {children}
+        </div>
+      </body>
+    </html>
   );
 }
