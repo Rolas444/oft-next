@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
       <body className={`${inter.className} container m-2`}>
         <Toaster />
         <main className="flex">
-          <h2 className="w-full font-bold text-center">App de recetas</h2>
+          <h2 className="w-full font-bold text-center">Oftalmo Vittes</h2>
         </main>
         <NavMenu menuItems={menu} />
         <div className="">
