@@ -4,12 +4,37 @@
 
 @media print {
   .printable {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       width: 148mm; /* Ancho de una hoja A5 */
       height: 210mm; /* Altura de una hoja A5 */
-      padding: 20mm; /* Espacio alrededor del contenido */
+      padding-left: 18mm; /* Espacio alrededor del contenido */
+      padding-right: 10mm;
+      padding-bottom: 36mm;
       box-sizing: border-box; /* Incluir el padding en el tamaño total del div */
       page-break-after: always; /* Insertar un salto de página después del div al imprimir */
   }
+  .name-p {
+    margin-left: 32mm;
+    margin-top: 6mm;
+    padding-bottom: 10mm;
+  }
+  .fecha-p {
+    margin-left: 75mm;
+    margin-top: 35mm;
+    @apply flex ;
+  }
+
+  .month-p {
+    margin-left: 5mm;
+    margin-right: 5mm;
+  }
+}
+
+.fecha-p {
+  @apply flex gap-2 justify-end;
 }
 
 /* :root {

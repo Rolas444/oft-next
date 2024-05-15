@@ -25,6 +25,11 @@ const RecetaPage = () => {
         Detail: ''
     }
 
+    const date = new Date();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11, por lo que debes sumar 1
+    const year = date.getFullYear();
+
     const { handleSubmit, control, reset, watch } = useForm({
         defaultValues
     });
@@ -128,7 +133,7 @@ const RecetaPage = () => {
         reset(tmpDosage)
     }
 
-    const deleteDosageByID = async(dosage) => {
+    const deleteDosageByID = async (dosage) => {
         // console.log(dosage)
         const response = await deleteDosage(dosage.ID)
         console.log(response)
@@ -143,7 +148,7 @@ const RecetaPage = () => {
 
     const handlePrint = useReactToPrint({
         content: () => divPrint.current,
-      });
+    });
 
     useEffect(() => {
         getPersonas()
@@ -196,19 +201,25 @@ const RecetaPage = () => {
                             </div>
                         </div>
                         <div ref={divPrint} className="py-2 m-2 printable">
-                            <p className="py-3">Paciente: <span className="font-bold">{persona}</span></p>
+                            <div className="fecha-p"><div>{day}</div><div className="month-p">{month}</div><div>{year}</div></div>
+                            <p className="py-3 name-p"> <span className="font-bold">{persona}</span></p>
                             {
                                 recetas.map(item => {
                                     return (
                                         <div key={item.ID} className="py-2 m-1">
-                                            <p className="flex items-center font-bold gap-1">
-                                                {findMedication(item.MedicationID).label}
+
+                                            <div className="flex gap-2">
+                                                <p className=" items-center font-bold gap-1">
+                                                    {findMedication(item.MedicationID).label}
+
+                                                </p>
+                                                <p>{item.Detail}</p>
                                                 <span className="flex text-transparent">
                                                     <RiEditFill onClick={() => editDosage(item)} className="cursor-pointer text-transparent hover:text-cyan-800 " />
                                                     <TiDelete onClick={() => deleteDosageByID(item)} className="cursor-pointer text-transparent hover:text-orange-800" />
                                                 </span>
-                                            </p>
-                                            <p>{item.Detail}</p>
+                                            </div>
+
                                         </div>
                                     )
                                 })
