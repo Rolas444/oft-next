@@ -86,7 +86,7 @@ const RecetaPage = () => {
             // console.log(receta.data)
             idReceta = receta.data.ID
         }
-        console.log(idReceta)
+        // console.log(idReceta)
         // reset(row.original)
         setRecetaID(idReceta)
         if (modalRef.current) {
@@ -103,7 +103,7 @@ const RecetaPage = () => {
     }
 
     const saveData = async () => {
-        console.log(recetaID)
+        // console.log(recetaID)
 
         let data = {
             PrescriptionID: recetaID,
@@ -113,10 +113,10 @@ const RecetaPage = () => {
         if (watch('ID') > 0) {
             data.ID = watch('ID')
             const response = await updateDosage(data)
-            console.log(response)
+            // console.log(response)
         } else {
             const response = await createDosage(data)
-            console.log(response)
+            // console.log(response)
         }
         // const response = await createDosage(data)
         // console.log(response)
@@ -136,7 +136,7 @@ const RecetaPage = () => {
     const deleteDosageByID = async (dosage) => {
         // console.log(dosage)
         const response = await deleteDosage(dosage.ID)
-        console.log(response)
+        // console.log(response)
         resetForm()
         cargaData()
     }
@@ -159,9 +159,9 @@ const RecetaPage = () => {
         cargaData()
     }, [recetaID])
 
-    useEffect(() => {
-        console.log(watch())
-    }, [watch()])
+    // useEffect(() => {
+    //     console.log(watch())
+    // }, [watch()])
 
     return (<>
         <div>

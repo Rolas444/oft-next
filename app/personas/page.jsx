@@ -55,7 +55,7 @@ const PersonaPage = () => {
         } else {
             res = await createPerson(data)
         }
-        console.log(res)
+        // console.log(res)
         cargaData();
         toast.success('Registro exitoso')
     }

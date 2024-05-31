@@ -72,8 +72,8 @@ export const createReceta = async (data)=>{
         const response = await api.post('/prescriptions', data);
         return response.data;
     } catch (error) {
-        console.error(error);
-        console.log(error)
+        // console.error(error);
+        // console.log(error)
     }
 }
 

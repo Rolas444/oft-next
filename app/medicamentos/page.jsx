@@ -45,7 +45,7 @@ export const MedicametoPage = () => {
         }else{
             res= await createMedicamento(data)
         }
-        console.log(res)
+        // console.log(res)
         cargaData()
         toast.success('Registro exitoso')
     }
@@ -65,9 +65,9 @@ export const MedicametoPage = () => {
         cargaData();
     }, [])
 
-    useEffect(() => {
-        console.log(watch());
-    }, [watch()])
+    // useEffect(() => {
+    //     console.log(watch());
+    // }, [watch()])
 
     return (
         <div>
