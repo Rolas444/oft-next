@@ -30,7 +30,7 @@ const RecetaPage = () => {
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11, por lo que debes sumar 1
     const year = date.getFullYear();
 
-    const { handleSubmit, control, reset, watch } = useForm({
+    const { handleSubmit, control, setValue, reset, watch } = useForm({
         defaultValues
     });
 
@@ -60,7 +60,7 @@ const RecetaPage = () => {
     const getAllMedicamentos = async () => {
         let listaMedicamentos = await getMedicamentos()
         let listaFormateada = listaMedicamentos.map(item => {
-            return { value: item.ID, label: item.Name }
+            return { value: item.ID, label: item.Name, ...item }
         })
         setMedicamentos(listaFormateada)
     }
@@ -184,6 +184,10 @@ const RecetaPage = () => {
                                     control={control}
                                     render={({ field }) =>
                                         <Select {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e)
+                                                setValue('Detail', e.Details)
+                                            }}
                                             styles={{
                                                 option: (provided, state) => ({
                                                     ...provided,
@@ -214,9 +218,9 @@ const RecetaPage = () => {
 
                                                 </p>
                                                 <p>{item.Detail}</p>
-                                                <span className="flex text-transparent">
-                                                    <RiEditFill onClick={() => editDosage(item)} className="cursor-pointer text-transparent hover:text-cyan-800 " />
-                                                    <TiDelete onClick={() => deleteDosageByID(item)} className="cursor-pointer text-transparent hover:text-orange-800" />
+                                                <span className="flex print:text-transparent">
+                                                    <RiEditFill onClick={() => editDosage(item)} className="cursor-pointer w-5 h-5 print:text-transparent text-cyan-800 " />
+                                                    <TiDelete onClick={() => deleteDosageByID(item)} className="cursor-pointer w-5 h-5 print:text-transparent text-orange-800" />
                                                 </span>
                                             </div>
 
